@@ -8,6 +8,20 @@ function QuestionItem({ question }) {
       {answer}
     </option>
   ));
+  function handleDelete(id) {
+    fetch(`http://localhost:4000/questions/${id}`, {
+      method: "Delete",
+    });
+  }
+  function handleChange(id, val) {
+    fetch(`http://localhost:4000/questions/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: {
+        correctIndex: val,
+      },
+    });
+  }
 
   return (
     <li>
@@ -15,9 +29,17 @@ function QuestionItem({ question }) {
       <h5>Prompt: {prompt}</h5>
       <label>
         Correct Answer:
-        <select defaultValue={correctIndex}>{options}</select>
+        <select
+          defaultValue={correctIndex}
+          onChange={(e) => {
+            let val = e.target.value;
+            handleChange(id, val);
+          }}
+        >
+          {options}
+        </select>
       </label>
-      <button>Delete Question</button>
+      <button onClick={() => handleDelete(id)}>Delete Question</button>
     </li>
   );
 }
